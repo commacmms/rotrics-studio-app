@@ -1,8 +1,9 @@
 # Rotrics Studio for DexArm
 Based on the original Rotrics Studio App
 
-## 1.Instalaltion and configuration
-These instruction were made for development on a windows machine outside of China (major thing related to that is the npm download server that is different in China)
+## 1.Installation and configuration
+These instruction were made for development on a windows machine outside of China
+ (major thing related to that is the npm download server that is different in China)
 1. Install java，python2.7，node.js（>=14.1.0 with npm   
 2. Configure environment variables：python，java      
 3. Install git-bash  
@@ -11,8 +12,8 @@ These instruction were made for development on a windows machine outside of Chin
 安装最新的visual studio（要选择professional版本）（编译serialport时候需要）  
 安装时候要注意，一定要选择“Desktop development with C++”，在workload选项中  
 否则会报错：“Visual Studio C++ core feature” missing  
-  
-## 2.clone代码并安装依赖 
+
+## 2.clone代码并安装依赖
 ```bash
 # clone repository，必须三个repository都放在同一个文件夹下（影响copy_files.js脚本执行）
 git clone https://github.com/Rotrics-Dev/rotrics-studio-app.git
@@ -60,7 +61,7 @@ npm start
 cd rotrics-studio-app/web
 npm start
 ##若一切正常，可以看到页面正常显示：http://localhost:8080/  
-``` 
+```
 
 ## 5.Electron环境下运行
 ```bash
@@ -78,7 +79,7 @@ npm start
 ## 6.Electron打包
 ```bash
 cd rotrics-studio-app/electron
-#for mac: 
+#for mac:
 #必须在mac电脑上
 npm run build:mac-x64
 
