@@ -1,17 +1,18 @@
-# 从零开始构建Rotrics Studio App
+# Rotrics Studio for DexArm
+Based on the original Rotrics Studio App
 
-## 1.安装和配置
-安装java，python2.7，node（>=14.1.0）     
-配置环境变量：python，java      
-配置cnpm：https://developer.aliyun.com/mirror/NPM?from=tnpm    
-安装git bash（mac不需要安装；windows需要使用linux terminal；git bash比较好用）  
+## 1.Instalaltion and configuration
+These instruction were made for development on a windows machine outside of China (major thing related to that is the npm download server that is different in China)
+1. Install java，python2.7，node.js（>=14.1.0 with npm   
+2. Configure environment variables：python，java      
+3. Install git-bash  
 
 编译serialport和rotrics-scratch-blocks都需要用到python2.7    
 安装最新的visual studio（要选择professional版本）（编译serialport时候需要）  
 安装时候要注意，一定要选择“Desktop development with C++”，在workload选项中  
 否则会报错：“Visual Studio C++ core feature” missing  
   
-## 2.clone代码并安装依赖
+## 2.clone代码并安装依赖 
 ```bash
 # clone repository，必须三个repository都放在同一个文件夹下（影响copy_files.js脚本执行）
 git clone https://github.com/Rotrics-Dev/rotrics-studio-app.git
