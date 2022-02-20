@@ -50,8 +50,3 @@ switch (os) {
         copyDirectorySync("../server/CuraEngine/4.6.2", "./CuraEngine/4.6.2");
         break;
 }
-
-
-
-
-

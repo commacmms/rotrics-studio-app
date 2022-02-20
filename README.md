@@ -1,69 +1,83 @@
-# Rotrics Studio for DexArm
-Based on the original Rotrics Studio App
+# Rotrics Studio for DexArm - Build development environment
+Based on the original RotricsStudio App instructions.
 
 ## 1.Installation and configuration
-These instruction were made for development on a windows machine outside of China
- (major thing related to that is the npm download server that is different in China)
-1. Install java，python2.7，node.js（>=14.1.0 with npm   
-2. Configure environment variables：python，java      
-3. Install git-bash  
+These instruction apply to a VM Linux development environment running Ubuntu 20.04
+on a Windows 10 host. Using atom as IDE.
+0. Update your repositories (sudo apt update)
+1. Install java (sudo apt install openjdk-17-jre-headless)
+2. Install python 2.7 (sudo apt install python2)
+3. Install node.js (>=14.1.0) and npm (sudo apt install nodejs npm). Check your
+nodejs version (node -v). If it is not >14.1, run the following one by one:
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+4. Install atom (see here: https://linuxize.com/post/how-to-install-atom-text-editor-on-ubuntu-20-04/)
 
-编译serialport和rotrics-scratch-blocks都需要用到python2.7    
-安装最新的visual studio（要选择professional版本）（编译serialport时候需要）  
-安装时候要注意，一定要选择“Desktop development with C++”，在workload选项中  
-否则会报错：“Visual Studio C++ core feature” missing  
-
-## 2.clone代码并安装依赖
+## 2.Setup repositories on your local machine
 ```bash
-# clone repository，必须三个repository都放在同一个文件夹下（影响copy_files.js脚本执行）
-git clone https://github.com/Rotrics-Dev/rotrics-studio-app.git
-git clone https://github.com/Rotrics-Dev/rotrics-scratch-vm.git
-git clone https://github.com/Rotrics-Dev/rotrics-scratch-blocks.git
+# clone repositories
+Use atom to clone each repository on the following list. To use github in atom,
+bring up the commands palette (ctrl-shft-P). Search for "clone", select "clone from github" and enter URL.
+You should end up with all the repositories loaded inside your project.
+Repository 1: https://github.com/commacmms/rotrics-studio-app.git
+Repository 2: https://github.com/commacmms/rotrics-scratch-vm.git
+Repository 3: https://github.com/commacmms/rotrics-scratch-blocks.git
 
-# npm太慢，推荐cnpm
-cd rotrics-scratch-vm
-cnpm install
-npm link
+Go to the project root on a terminal window (mine is ~/github):
 
-cd rotrics-scratch-blocks
-cnpm install
-npm link
-
-cd rotrics-studio-app/server
-cnpm install
-
-cd rotrics-studio-app/web
-cnpm install
-
-cd rotrics-studio-app/electron
-#electron用于打包，特殊，需要使用npm安装；cnpm和npm并不相同；
-#使用cnpm安装后，打包的软件打开速度特别慢；耐心等，可能需要半小时
+cd ~/github/rotrics-scratch-vm
 npm install
-#重新编译native module(目前只用到serialport)，保证和electron node版本对应；
-#耐心等，可能需要半小时
-npm run rebuild  
+sudo npm link
+
+cd ~/github/rotrics-scratch-blocks
+npm install
+sudo npm link
+
+cd ~/github/rotrics-studio-app/server
+npm install
+
+cd ~/github/rotrics-studio-app/web
+mkdir build-web
+mkdir build-web/i18n
+cp index.html build-web
+npm install
+
+There's some issues with serialport when npm tries to fetch, just do the following:
+curl -L https://github.com/serialport/node-serialport/releases/download/%40serialport%2Fbindings%409.2.8/bindings-v9.2.8-electron-v89-linux-x64.tar.gz -o prebuilds/bindings-v9.2.8-electron-v76-linux-x64.tar.gz
+
+mv and rename the file you just downloaded to the location after the @ on the following line of the error you
+get when you do npm install
+
+looking for cached prebuild @ ~/.npm/_prebuilds/009c6f-bindings-v9.2.8-electron-v76-linux-x64.tar.gz
+
+mv bindings-v9.2.8-electron-v76-linux-x64.tar.gz ~/.npm/_prebuilds/009c6f-bindings-v9.2.8-electron-v76-linux-x64.tar.gz
+
+cd ~/github/rotrics-studio-app/electron
+npm install
+
+npm run rebuild
 ```
 
-## 3.其他
-编译rotrics-scratch-blocks：  
+## 3. Others
+Compile rotrics-scratch-blocks：  
 for mac: npm run prepublish-mac  
 for win: npm run prepublish-win  
 
-复制文件  
-cd rotrics-studio-app/web  
-新建文件夹：build-web，并将web/index.html copy到build-web下  
-
-## 4.开发环境下运行
+## 4.Run in the development environment
 ```bash
 cd rotrics-studio-app/server
 npm start
 
 cd rotrics-studio-app/web
 npm start
-##若一切正常，可以看到页面正常显示：http://localhost:8080/  
+
+IF everything is normal, you will be able to see the page that is displayed at
+http://localhost:8080
+You will see a page that says "Loading..."
 ```
 
-## 5.Electron环境下运行
+## 5. Run in electron enviroment
 ```bash
 cd rotrics-studio-app/server
 npm run build
@@ -73,41 +87,40 @@ npm run build
 
 cd rotrics-studio-app/electron
 npm start
-# 若提示serialport版本与electron node版本不对应，请执行：npm run rebuild
+# If the serialport version does not correspond to the electron node version, execute
+npm run rebuild
 ```
 
-## 6.Electron打包
+## 6.Electron packaging
 ```bash
 cd rotrics-studio-app/electron
 #for mac:
-#必须在mac电脑上
 npm run build:mac-x64
 
 #for win:
-#必须在windows电脑上
 npm run build:win-x64
 ```
 
-# 项目结构简述
-包括三个子项目，都是node项目  
+# Brief description of project structure
+Including three sub-projects, all of which are node projects
 ### web
-前端部分, build后得到"index.html+js+资源"，electron运行时执行loadFile(index.html)
+In the front-end part, "index.html+js+resource" is obtained after build, and loadFile(index.html) is executed when electron is running
 ### server
-local server, 给web端提供http api和socket connection，再访问native层  
+local server, provides http api and socket connection to the web side, and then accesses the native layer
 ### electron
-web中运行时候，local server使用指定address：http://localhost:9000  
-electron运行时，动态获取端口，并将local server address挂在window下  
-方便web端获取，从未建立socket connect和使用http api  
-electron执行main.js时候，先启动local server，成功后再加载web端build得到的index.html
+When running in the web, the local server uses the specified address: http://localhost:9000
+When electron is running, it dynamically obtains the port and hangs the local server address under the window
+Convenient for web access, never establish socket connect and use http api
+When electron executes main.js, it starts the local server first, and then loads the index.html obtained by the web-side build after success.
 
-## 注意事项
+## Precautions
 node: >=14.1.0
-electron: >=9.0.0  
-serialport: >=9.0.0   
+electron: >=9.0.0
+serialport: >=9.0.0
 
-若提示serialport版本与electron node版本不对应，请执行：npm run rebuild  
-electron依赖的serialport必须和electron node版本对应，因此需要rebuild  
-electron和server的package.json中的dependencies需要保持一致   
-electron下，安装node_modules必须使用npm而不是cnpm  
+If it prompts that the serialport version does not correspond to the electron node version, please execute: npm run rebuild
+The serialport that electron depends on must correspond to the version of electron node, so rebuild is required
+The dependencies in the package.json of electron and server need to be consistent
+Under electron, you must use npm instead of cnpm to install node_modules
 
-要保证两个文件内容一致：server/src/constants.js和web/src/constants.js  
+Make sure the contents of the two files are consistent: server/src/constants.js and web/src/constants.js
